@@ -9,10 +9,10 @@ var uglify = require('gulp-uglify');
 var imagemin = require('gulp-imagemin');
 var browserSync = require("browser-sync").create();
 
-// Put this after including our dependencies
 var paths = {
   styles: {
       // By using styles/**/*.sass we're telling gulp to check all folders for any sass file
+      // Changed it to only look at index.scss which imports the rest of the css files
       src: "src/css/index.scss",
       // Compiled files will end up in whichever folder it's found in (partials are not compiled)
       dest: "public/css"
@@ -34,7 +34,16 @@ var paths = {
   }
 };
 
-// Define tasks after requiring dependencies
+// HTML task to copy the files to public folder
+function html() {
+  return (
+    gulp
+      .src(paths.html.src)
+      .pipe(gulp.dest(paths.html.dest))
+  )
+}
+
+// CSS task to convert SASS -> CSS, minify, concat and add prefixes.
 function style() {
   return (
     gulp
@@ -54,14 +63,7 @@ function style() {
   );
 }
 
-function html() {
-  return (
-    gulp
-      .src(paths.html.src)
-      .pipe(gulp.dest(paths.html.dest))
-  )
-}
-
+// Javascript task to minify and concat
 function js() {
   return (
     gulp
@@ -72,18 +74,28 @@ function js() {
   )
 }
 
-// A simple task to reload the page
-function reload() {
-  browserSync.reload();
-}
-
-// Image optimization
+// Task for image optimization
 function image() {
   return (
     gulp.src(paths.images.src)
       .pipe(imagemin())
       .pipe(gulp.dest(paths.images.dest))
   )
+}
+
+// A simple task to reload the page
+function reload() {
+  browserSync.reload();
+}
+
+// Build task to be run to create the production ready site
+function build(done) {
+  return gulp.series(
+    html,
+    style,
+    js,
+    image
+  )(done);
 }
 
 // Add browsersync initialization at the start of the watch task
@@ -109,15 +121,6 @@ function watch() {
   // This can be html or whatever you're using to develop your website
   // Note -- you can obviously add the path to the Paths object
   gulp.watch(paths.html.src, reload);
-}
-
-function build(done) {
-  return gulp.series(
-    html,
-    style,
-    js,
-    image
-  )(done);
 }
 
 // Don't forget to expose the tasks!
