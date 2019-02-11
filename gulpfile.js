@@ -1,4 +1,5 @@
 var gulp = require("gulp");
+var babel = require('gulp-babel');
 var sass = require("gulp-sass");
 var postcss = require("gulp-postcss");
 var autoprefixer = require("autoprefixer");
@@ -8,6 +9,7 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var imagemin = require('gulp-imagemin');
 var browserSync = require("browser-sync").create();
+
 
 var paths = {
   styles: {
@@ -73,6 +75,7 @@ function js() {
   return (
     gulp
       .src(paths.js.src)
+      .pipe(babel({ presets: ['@babel/env']}))
       .pipe(uglify())
       .pipe(concat('main.min.js'))
       .pipe(gulp.dest(paths.js.dest))
