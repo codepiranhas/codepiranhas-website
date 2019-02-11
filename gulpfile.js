@@ -12,14 +12,13 @@ var browserSync = require("browser-sync").create();
 var paths = {
   styles: {
       // By using styles/**/*.sass we're telling gulp to check all folders for any sass file
-      // Changed it to only look at index.scss which imports the rest of the css files
-      src: "src/css/index.scss",
+      src: "src/css/**/*.scss",
       // Compiled files will end up in whichever folder it's found in (partials are not compiled)
       dest: "public/css"
   },
 
   html: {
-   src: "src/**/*.html",
+   src: "src/*.html",
    dest: "public"
   },
 
@@ -31,6 +30,11 @@ var paths = {
   images: {
     src: "src/images/**/*",
     dest: "public/images"
+  },
+
+  general: {
+    // This has its own path so we can later say to grunt to concat it first, before other css files
+    cssResetMethod: "src/css/normalize.scss"
   }
 };
 
@@ -40,6 +44,7 @@ function html() {
     gulp
       .src(paths.html.src)
       .pipe(gulp.dest(paths.html.dest))
+      .pipe(browserSync.reload({stream:true}))
   )
 }
 
@@ -47,7 +52,7 @@ function html() {
 function style() {
   return (
     gulp
-      .src(paths.styles.src)
+      .src([paths.general.cssResetMethod, paths.styles.src])
       // Initialize sourcemaps before compilation starts
       .pipe(sourcemaps.init())
       .pipe(sass())
@@ -85,7 +90,7 @@ function image() {
 
 // A simple task to reload the page
 function reload() {
-  browserSync.reload();
+  return browserSync.reload();
 }
 
 // Build task to be run to create the production ready site
@@ -120,7 +125,7 @@ function watch() {
   // We should tell gulp which files to watch to trigger the reload
   // This can be html or whatever you're using to develop your website
   // Note -- you can obviously add the path to the Paths object
-  gulp.watch(paths.html.src, reload);
+  // gulp.watch(paths.html.src, reload);
 }
 
 // Don't forget to expose the tasks!
