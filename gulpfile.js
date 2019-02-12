@@ -50,6 +50,15 @@ function html() {
   )
 }
 
+// HTML task without browserSync for build
+function htmlNoSync() {
+  return (
+    gulp
+      .src(paths.html.src)
+      .pipe(gulp.dest(paths.html.dest))
+  )
+}
+
 // CSS task to convert SASS -> CSS, minify, concat and add prefixes.
 function style() {
   return (
@@ -99,7 +108,7 @@ function reload() {
 // Build task to be run to create the production ready site
 function build(done) {
   return gulp.series(
-    html,
+    htmlNoSync,
     style,
     js,
     image
