@@ -30,8 +30,8 @@ var paths = {
   },
 
   images: {
-    src: "src/images/**/*",
-    dest: "public/images"
+    src: "src/assets/images/**/*",
+    dest: "public/assets/images"
   },
 
   general: {
