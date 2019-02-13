@@ -30,8 +30,8 @@ var paths = {
   },
 
   images: {
-    src: "src/images/**/*",
-    dest: "public/images"
+    src: "src/assets/images/**/*",
+    dest: "public/assets/images"
   },
 
   general: {
@@ -47,6 +47,15 @@ function html() {
       .src(paths.html.src)
       .pipe(gulp.dest(paths.html.dest))
       .pipe(browserSync.reload({stream:true}))
+  )
+}
+
+// HTML task without browserSync for build
+function htmlNoSync() {
+  return (
+    gulp
+      .src(paths.html.src)
+      .pipe(gulp.dest(paths.html.dest))
   )
 }
 
@@ -99,7 +108,7 @@ function reload() {
 // Build task to be run to create the production ready site
 function build(done) {
   return gulp.series(
-    html,
+    htmlNoSync,
     style,
     js,
     image
