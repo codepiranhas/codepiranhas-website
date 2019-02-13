@@ -13,9 +13,7 @@ var browserSync = require("browser-sync").create();
 
 var paths = {
   styles: {
-      // By using styles/**/*.sass we're telling gulp to check all folders for any sass file
       src: "src/css/**/*.scss",
-      // Compiled files will end up in whichever folder it's found in (partials are not compiled)
       dest: "public/css"
   },
 
@@ -35,7 +33,7 @@ var paths = {
   },
 
   general: {
-    // This has its own path so we can later say to grunt to concat it first, before other css files
+    // This has its own path so we can later say to gulp to concat it first, before other css files
     cssResetMethod: "src/css/normalize.scss"
   }
 };
@@ -50,7 +48,7 @@ function html() {
   )
 }
 
-// HTML task without browserSync for build
+// HTML task without browserSync for build task
 function htmlNoSync() {
   return (
     gulp
@@ -79,7 +77,7 @@ function style() {
   );
 }
 
-// Javascript task to minify and concat
+// Javascript task to convert ES6 -> ES5, minify and concat
 function js() {
   return (
     gulp
@@ -100,11 +98,6 @@ function image() {
   )
 }
 
-// A simple task to reload the page
-function reload() {
-  return browserSync.reload();
-}
-
 // Build task to be run to create the production ready site
 function build(done) {
   return gulp.series(
@@ -122,24 +115,18 @@ function watch() {
   js();
 
   browserSync.init({
-      // You can tell browserSync to use this directory and serve it as a mini-server
       server: {
           baseDir: "./public"
       }
-      // If you are already serving your website locally using something like apache
-      // You can use the proxy setting to proxy that instead
-      // proxy: "yourlocal.dev"
   });
   gulp.watch(paths.styles.src, style);
   gulp.watch(paths.html.src, html);
   gulp.watch(paths.js.src, js);
   	
   // We should tell gulp which files to watch to trigger the reload
-  // This can be html or whatever you're using to develop your website
-  // Note -- you can obviously add the path to the Paths object
   // gulp.watch(paths.html.src, reload);
 }
 
-// Don't forget to expose the tasks!
+// Exposed tasks
 exports.watch = watch;
 exports.build = build;
