@@ -45,7 +45,7 @@ function html() {
       .src(paths.html.src)
       .pipe(gulp.dest(paths.html.dest))
       .pipe(browserSync.reload({stream:true}))
-  )
+  );
 }
 
 // HTML task without browserSync for build task
@@ -54,7 +54,7 @@ function htmlNoSync() {
     gulp
       .src(paths.html.src)
       .pipe(gulp.dest(paths.html.dest))
-  )
+  );
 }
 
 // CSS task to convert SASS -> CSS, minify, concat and add prefixes.
@@ -86,7 +86,7 @@ function js() {
       .pipe(uglify())
       .pipe(concat('main.min.js'))
       .pipe(gulp.dest(paths.js.dest))
-  )
+  );
 }
 
 // Task for image optimization
@@ -95,7 +95,7 @@ function image() {
     gulp.src(paths.images.src)
       .pipe(imagemin())
       .pipe(gulp.dest(paths.images.dest))
-  )
+  );
 }
 
 // Build task to be run to create the production ready site
